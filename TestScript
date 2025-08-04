@@ -1,108 +1,8 @@
---@name ULX Reacharound V0.01
+--@name test script
 --@author Asplur
 --@shared
 
 if SERVER then
-        --===== Text =====--
-                                        --_______======_  TEXT  _======_______--
-
-        -- ____________________________________
-        --|        TEXT INSIDE OF A BOX        |
-        --|____________________________________|
-
-
-    local Commands = {
-
-        {Name = "Chip Tester", Description = "Check if the Chip is currently active", String = "/c", Length = 2, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Chip Quit", Description = "Remove the chip effectly quitting the script", String = "/stop", Length = 5, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Performance", Description = "Creates a timer that records average server performance", String = "/performance ", Length = 13, Build = true, PVP = true, Exmaple = "/performance 9 (This will create a 9 Second timer)", CanTargetEveryone = false, Toggle = false},
-
-
-                                        --_______======_  TELEPORTATION AND MOVEMENT  _======_______--
-
-        {Name = "Teleport", Description = "Teleport to other Players bypassign TPA", String = "/goto ", Length = 6, Build = true, PVP = false, Exmaple = "/goto JohnMadden", CanTargetEveryone = false, Toggle = false},
-        {Name = "Back", Description = "Return to any previously teleported position", String = "/back", Length = 5, Build = true, PVP = false, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Top", Description = "Teleport to the highest point possible below your head", String = "/top", Length = 4, Build = true, PVP = false, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Down", Description = "Teleport to the lowest point possible below your head", String = "/down", Length = 5, Build = true, PVP = false, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Hit Teleport", Description = "Teleport to your current look position", String = "/hit", Length = 4, Build = true, PVP = false, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Goto Position", Description = "Teleport to a given Vector Position", String = "/gotopos ", Length = 9, Build = true, PVP = false, Exmaple = "/gotopos 100 , 0, 100", CanTargetEveryone = false, Toggle = false},
-        {Name = "Sethome", Description = "Creates a home position you can teleport to", String = "/shadd ", Length = 7, Build = true, PVP = true, Exmaple = "/shadd myhome | /shadd 10 | /shadd JohnMadden (Any words or numbers can be used)", CanTargetEveryone = false, Toggle = false},
-        {Name = "home", Description = "Teleports to the provided home name", String = "/sh ", Length = 4, Build = true, PVP = false, Exmaple = "/sh myhome | /sh 10 | /sh JohnMadden (Just spell your house name correctly)", CanTargetEveryone = false, Toggle = false},
-        {Name = "Delhome", Description = "Removes the provided home from the list of homes", String = "/delhome ", Length = 9, Build = true, PVP = false, Exmaple = "/delhome myhome | /delhome 10 | /delhome JohnMadden (Just spell your house name correctly)", CanTargetEveryone = false, Toggle = false},
-        {Name = "listhome", Description = "List of homes homes you can teleport to", String = "/listhomes ", Length = 11, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Respspawn", Description = "Respawn at a random location unless given Home or PosVector", String = "/spawn ", Length = 7, Build = true, PVP = false, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-
-
-                                        --_______======_  PLAYERS AND MANIPULATION  _======_______--
-
-        {Name = "Bring Player", Description = "Uses a multiple props to trap and bring a player to your location", String = "/bring ", Length = 7, Build = true, PVP = true, Exmaple = "/bring JohnMadden", CanTargetEveryone = true, Toggle = false},
-        {Name = "Jail Player", Description = "A make shift jail that prevents the player from moving or placing props", String = "/jail ", Length = 6, Build = true, PVP = true, Exmaple = "/jail JohnMadden", CanTargetEveryone = true, Toggle = false},
-        {Name = "Ragdoll", Description = "Sends a ULX ragdoll command to the console", String = "/ragdoll", Length = 8, Build = true, PVP = false, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Suicide", Description = "Sends kill to the console", String = "/kys ", Length = 5, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Strip Weapons", Description = "Remove all weapons and tools from the players Inventory", String = "/strip", Length = 6, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "List Weapons", Description = "Prints a list of all weapons a player is holding", String = "/weapons ", Length = 9, Build = true, PVP = true, Exmaple = "/weapons JohnMadden", CanTargetEveryone = true, Toggle = false},
-        {Name = "Get SteamID", Description = "Prints a given players SteamID in Console", String = "/steamid ", Length = 9, Build = true, PVP = true, Exmaple = "/steamid JohnMadden", CanTargetEveryone = true, Toggle = false},
-        {Name = "Spectate", Description = "Spectate any player without their knowledge", String = "/spec ", Length = 6, Build = true, PVP = true, Exmaple = "/spec JohnMadden", CanTargetEveryone = false, Toggle = false},
-        {Name = "Bounce", Description = "Spawns trapolines under you before you hit the ground", String = "/bounce", Length = 7, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Ignite", Description = "Drown players in non-damaging purely visual flames", String = "/ignite ", Length = 8, Build = true, PVP = false, Exmaple = "/ignite JohnMadden", CanTargetEveryone = true, Toggle = false},
-        {Name = "Fling", Description = "Launches a player across the map", String = "/fling ", Length = 7, Build = true, PVP = true, Exmaple = "/fling JohnMadden", CanTargetEveryone = true, Toggle = false},
-        {Name = "Animation", Description = "Forces your player into an animation using CMD act commands", String = "/act ", Length = 5, Build = true, PVP = true, Exmaple = "/act dance", CanTargetEveryone = false, Toggle = false},
-
-
-                                        --_______======_  PROP AND ENTITY CONTROL  _======_______--
-
-        {Name = "Prop Count Lister", Description = "Lists all players by most Props owned", String = "/propcount", Length = 10, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Clear", Description = "Removes all props and entities you own", String = "/clear", Length = 6, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Prop Stealer", Description = "Saves the position and angle of every prop in the game to a file given a provided name", String = "/saveprops ", Length = 11, Build = true, PVP = true, Exmaple = "/saveprops JohnMadden", CanTargetEveryone = true, Toggle = false},
-        {Name = "Prop Loader", Description = "Loads the props saved in the propsave file given a provided name", String = "/loadprops ", Length = 11, Build = true, PVP = true, Exmaple = "/loadprops JohnMadden", CanTargetEveryone = false, Toggle = false},
-        {Name = "Kill NPCs", Description = "Kills every player made NPC at once", String = "/nonpc", Length = 6, Build = false, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "AntiVehicle", Description = "Places a Prop Cage around you to keep vehicle from hitting you", String = "/antiv", Length = 6, Build = true, PVP = false, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Trainfuck", Description = "Recreates the Trainfuck command as best as possible", String = "/trainfuck ", Length = 11, Build = true, PVP = true, Exmaple = "/trainfuck JohnMadden", CanTargetEveryone = true, Toggle = false},
-        {Name = "UnFreeze", Description = "Unfreezes all owned props enabling physics and gravity", String = "/unfreeze", Length = 9, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Rainbow Props", Description = "Constantly updates props to randomly cycled RGB values with the given speed", String = "/rainbow ", Length = 8, Build = true, PVP = true, Exmaple = "/rainbow 2 (Changes to a new color every 2 seconds)", CanTargetEveryone = false, Toggle = false},
-
-
-                                        --_______======_  PLAYER STATS AND MODIFIERS  _======_______--
-
-        {Name = "Gravity", Description = "Sets Gravity% of SF owner between -10 and 10", String = "/gravity ", Length = 9, Build = true, PVP = false, Exmaple = "/gravity 4 (Pushes you down with 4x gravity)", CanTargetEveryone = false, Toggle = false},
-        {Name = "Speed", Description = "Sets Speed% of SF owner between -10 and 10", String = "/speed ", Length = 7, Build = true, PVP = false, Exmaple = "/speed 4 (Increases movement speed by 4x)", CanTargetEveryone = false, Toggle = false},
-        {Name = "Crouch Speed", Description = "Speed at which your playermodel crouches between -10 and 10", String = "/couchspeed ", Length = 12, Build = true, PVP = false, Exmaple = "/couchspeed 4 (Increases couch speed by 4x", CanTargetEveryone = false, Toggle = false},
-        {Name = "Health", Description = "Set the owners Health value to any number with the provided value", String = "/health ", Length = 8, Build = true, PVP = false, Exmaple = "/health 1000", CanTargetEveryone = false, Toggle = false},
-        {Name = "Jump Power", Description = "Set the owners Jump Power between -10 and 10", String = "/jump ", Length = 6, Build = true, PVP = false, Exmaple = "/jump 4 (Jump with 4x Power)", CanTargetEveryone = false, Toggle = false},
-        {Name = "Weight", Description = "Set the owners weight between -10 and 10", String = "/mass ", Length = 6, Build = true, PVP = false, Exmaple = "/mass 4 (Player has 4x Weight)", CanTargetEveryone = false, Toggle = false},
-        {Name = "Chip Count Lister", Description = "Lists all players by most Chips owned and most Usage", String = "/chipcount ", Length = 11, Build = true, PVP = true, Exmaple = "/chipcount JohnMadden", CanTargetEveryone = true, Toggle = false},
-        {Name = "Ping Count Lister", Description = "Prints a list of players in order of highest to lowest ping in the Console", String = "/pingcount", Length = 10, Build = true, PVP = true, Exmaple = "/pingcount JohnMadden", CanTargetEveryone = true, Toggle = false},
-
-
-                                        --_______======_  VISUAL AND CHAT EFFECTS  _======_______--
-
-        {Name = "ESP Wallhacks", Description = "Created HUD elements for Hitboxes and Healthbars", String = "/esp ", Length = 5, Build = true, PVP = true, Exmaple = "/esp JohnMadden", CanTargetEveryone = true, Toggle = false},
-        {Name = "Visual Typing", Description = "Creates a little prop above your head when typing", String = "/vistype", Length = 8, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Drunk Talk", Description = "Slurs your words in chat giving a drunked appearence", String = "/drunkchat", Length = 10, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Simple Talk", Description = "Reduces as many words as possile to just a couple letters", String = "/simplechat", Length = 11, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-        {Name = "Schizophrenia", Description = "Creates NPCs in the corners of players eyes the go away when looked at", String = "/Schiz ", Length = 7, Build = true, PVP = true, Exmaple = "/Schiz JohnMadden", CanTargetEveryone = true, Toggle = false},
-        {Name = "Lag Switch", Description = "I'm not actually making one but it would be very easy", String = "/lagswitch", Length = 10},
-        {Name = "Invisibility", Description = "Makes your character model invisible people can still see your green aura", String = "/invis", Length = 6, Build = true, PVP = false, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-
-
-                                        --_______======_  CASINO AND CHAT GAMES  _======_______--
-
-        {Name = "Roll Dice", Description = "Roll's a Specified Dice and chats a random number", String = "/roll ", Length = 6, Build = true, PVP = true, Exmaple = "/roll 6 (Rolls a 1-6 Die) | /roll 6 2 (Rolls a 1-6 Die 2x times)", CanTargetEveryone = false, Toggle = false},
-        {Name = "Coin Flip", Description = "Flips a Coin and chats the Outcome", String = "/coinflip ", Length = 10, Build = true, PVP = true, Exmaple = "/coinflip JohnMadden Heads | /coinflip JohnMadden (Chooses a random Side)", CanTargetEveryone = false, Toggle = false},
-        {Name = "Double or Nothing", Description = "Chances a 50/50 win or lose and chats the outcome", String = "/double ", Length = 8, Build = true, PVP = true, Exmaple = "/double 500 (Gain 1000 or lose 500)", CanTargetEveryone = false, Toggle = false},
-        {Name = "8-Ball", Description = "Ask a question and recieve a random vague answer", String = "/8ball ", Length = 7, Build = true, PVP = true, Exmaple = "/8ball Does JohnMadden love me?", CanTargetEveryone = false, Toggle = false},
-        {Name = "Raffle Tickets", Description = "Starts a Raffle in chat and picks a random player to win", String = "/raffle ", Length = 8, Build = true, PVP = true, Exmaple = "/raffle 10000 (Starts a Raffle with a prize or 10k)", CanTargetEveryone = false, Toggle = false},
-        {Name = "Enter Raffle", Description = "Used to Enter the Raffle cannot be used by the raffle creator | Entry fee is 10% of the Prize", String = "/ticket", Length = 7, Build = true, PVP = true, Exmaple = "N/A", CanTargetEveryone = false, Toggle = false},
-
-
-                                        --_______======_  EMPTY TABLES  _======_______--
-
-        {Name = "", Description = "", String = "", Length = 0, Build = true, PVP = true, Exmaple = "", CanTargetEveryone = false, Toggle = false},
-        {Name = "", Description = "", String = "", Length = 0, Build = true, PVP = true, Exmaple = "", CanTargetEveryone = false, Toggle = false},
-        {Name = "", Description = "", String = "", Length = 0, Build = true, PVP = true, Exmaple = "", CanTargetEveryone = false, Toggle = false},
-    }
-
-
     hook.add("PlayerSay", "Command Owner Only", function(msg)
         if not player() == owner() then return end
 
@@ -115,7 +15,7 @@ if SERVER then
 
         if msg == "h" then
 
-            print(table.toString(Commands[24]), nil, true)
+            print("True")
 
         return ""
         end
