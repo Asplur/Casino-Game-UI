@@ -1,13 +1,10 @@
 if SERVER then
+
+    print("Working")
+
     hook.add("PlayerSay", "Command Owner Only", function(msg)
-        if not player() == owner() then return end
 
         local ply = owner()
-
-        --===== GET PLAYER GROUP AND GROUP COLOR =====--
-
-        local player_group = ply:getUserGroup()
-        local player_color = team.getColor(ply:getTeam())
 
         if msg == "h" then
 
@@ -15,8 +12,6 @@ if SERVER then
 
         return ""
         end
-
-        --===== Text =====--
 
     end)
 end
