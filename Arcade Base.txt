@@ -1,0 +1,115 @@
+--@name Base Arcade Machine
+--@author Asplur
+--@shared
+
+if SERVER then
+
+    local screen = prop.createComponent(chip():getPos() + Vector(-0.6, -2.6, 57.3), Angle(73.5,90,0), "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
+
+    local Seat_Prop = prop.create(chip():getPos() + chip():getRight() * -40, chip():getForward(), "models/props_c17/chair_stool01a.mdl", true)
+
+    local Seat = prop.createSeat(Seat_Prop:getPos() + Vector(0, 0, 30), Angle(0, -90, 0), "models/hunter/blocks/cube025x025x025.mdl", true)
+
+    local Camera = prop.create(Seat_Prop:getPos() + Vector(0, -10, 60), chip():getForward() + Angle(0, -90, 0), "models/hunter/blocks/cube025x025x025.mdl", true)
+
+    Camera:setColor(Color(0,0,0,0))
+    Seat:setColor(Color(0,0,0,0))
+
+    local Driver
+
+    hook.add("PlayerEnteredVehicle", "StoolChairEnter", function(ply, vehicle, num)
+        if vehicle == Seat then enableHud(ply, true) ply:setViewEntity(Camera) Driver = ply end
+    end)
+
+    hook.add("PlayerLeaveVehicle", "StoolChairExit", function(ply, vehicle)
+        if vehicle == Seat then Driver:setViewEntity(nil) end
+    end)
+
+--[[
+    chip():setNocollideAll(true)
+    chip():setNoDraw(true)
+]]
+
+    screen:setColor(Color(255,255,255,1))
+    screen:setNocollideAll(true)
+    screen:linkComponent(chip())
+    screen:setParent(chip())
+
+end
+
+if CLIENT then
+
+------=============================================================     DATA      ==================================================================
+
+    local Stretch_Ratio = Vector(1.54,1)
+    local screenWidth = 512 * Stretch_Ratio.x
+    local screenHeight = 512 * Stretch_Ratio.y
+    local screen = chip():getLinkedComponents()[1]
+    local mouse_pressed = input.isMouseDown(MOUSE.LEFT)
+    local mouse_x, mouse_y
+    local Button
+
+------=============================================================     INPUTS      ==================================================================
+
+    hook.add("InputPressed", "ButtonControls", function(button)
+        
+        if button == KEY.W then Button = 1
+        elseif button == KEY.S then Button = 2
+        elseif button == KEY.A then Button = 3
+        elseif button == KEY.D then Button = 4
+        end
+    end)
+
+    hook.add("Think", "", function()
+        mouse_x, mouse_y = input.getCursorPos()
+    end)
+
+------=============================================================      FUNCTIONS      ==================================================================
+
+
+
+
+------=============================================================      SCREEN RENDER      ==================================================================
+
+    timer.simple(0.2, function()
+        render.setScreenDimensions(screen, 0, 0, 25 * Stretch_Ratio.x, 25 * Stretch_Ratio.y)
+    end)
+
+    hook.add("Render", "Machine Screen", function()
+        render.setColor(Color(255,255,255,255))
+        render.drawRect(0, 0, screenWidth, screenHeight)
+    end)
+
+------=============================================================     HOLOGRAM RENDER      ==================================================================
+
+
+    local holo = hologram.create(chip():getPos(), chip():getAngles() + Vector(0, 180, 90), "models/Combine_Helicopter/helicopter_bomb01.mdl", Vector(50))
+    holo:setParent(chip())
+
+    local mymesh
+    local texture = material.create("VertexLitGeneric")
+    texture:setTextureURL("$basetexture", "https://github.com/Asplur/Casino-Game-UI/blob/main/ArcadeBase.png?raw=true")
+
+    http.get("https://raw.githubusercontent.com/Asplur/Casino-Game-UI/refs/heads/main/ArcadeMachine.obj", function(objdata)
+        local function doneLoadingMesh()
+            holo:setMesh(mymesh)
+            holo:setMeshMaterial(texture)
+            holo:setRenderBounds(Vector(-200), Vector(200))
+        end
+
+        local loadmesh = coroutine.wrap(function() 
+            mymesh = mesh.createFromObj(objdata, true).Object_10 
+            return true 
+        end)
+
+        hook.add("think", "loadingMesh", function()
+            while quotaAverage() < quotaMax() / 2 do
+                if loadmesh() then
+                    doneLoadingMesh()
+                    hook.remove("think", "loadingMesh")
+                    return
+                end
+            end
+        end)
+    end)  
+end
