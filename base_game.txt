@@ -27,9 +27,9 @@ if SERVER then
     Chair_Four:doNotDuplicate(true)
 
     timer.simple(1, function()
-        local screen1Pos = Table:getPos() + Vector(0, 0, 31.8) + Table:getForward() * 19.15
+        local screen1Pos = Table:getPos() + Vector(0, 0, 31.8) + Table:getForward() * 19.1
         local screen1Ang = (Table:getPos() - screen1Pos + Vector(0, 37.3, 0)):getAngle()
-        local screen1 = prop.createComponent(screen1Pos, screen1Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
+        local screen1 = prop.createComponent(screen1Pos + Vector(-0.1, 0, 0), screen1Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
         screen1:setColor(Color(255,255,255,1))
         screen1:setNocollideAll(true)
         screen1:linkComponent(Chip)
@@ -37,7 +37,7 @@ if SERVER then
         screen1:doNotDuplicate()
         local screen2Pos = Table:getPos() + Vector(0, 0, 31.8) - Table:getForward() * 19.15
         local screen2Ang = (Table:getPos() - screen2Pos + Vector(0, -37.3, 0)):getAngle()
-        local screen2 = prop.createComponent(screen2Pos, screen2Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
+        local screen2 = prop.createComponent(screen2Pos + Vector(0.14, 0, -0.1), screen2Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
         screen2:setColor(Color(255,255,255,1))
         screen2:setNocollideAll(true)
         screen2:linkComponent(Chip)
@@ -45,7 +45,7 @@ if SERVER then
         screen2:doNotDuplicate()
         local screen3Pos = Table:getPos() + Vector(0, 0, 31.8) + Table:getRight() * 19.15
         local screen3Ang = (Table:getPos() - screen3Pos + Vector(37.3, 0, 0)):getAngle()
-        local screen3 = prop.createComponent(screen3Pos, screen3Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
+        local screen3 = prop.createComponent(screen3Pos + Vector(0, 0, 0), screen3Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
         screen3:setColor(Color(255,255,255,1))
         screen3:setNocollideAll(true)
         screen3:linkComponent(Chip)
@@ -53,7 +53,7 @@ if SERVER then
         screen3:doNotDuplicate()
         local screen4Pos = Table:getPos() + Vector(0, 0, 31.8) - Table:getRight() * 19.15
         local screen4Ang = (Table:getPos() - screen4Pos + Vector(-37.3, 0, 0)):getAngle()
-        local screen4 = prop.createComponent(screen4Pos, screen4Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
+        local screen4 = prop.createComponent(screen4Pos + Vector(0, -0.22, 0), screen4Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
         screen4:setColor(Color(255,255,255,1))
         screen4:setNocollideAll(true)
         screen4:linkComponent(Chip)
@@ -86,6 +86,12 @@ if CLIENT then
     local screen1, screen2, screen3, screen4 = nil, nil, nil, nil
     local Player1, Player2, Player3, Player4 = nil, nil, nil, nil
     local mouse_pressed = false
+
+    local Cursor = render.createMaterial("models/simple_weapons/weapons/kobralense")
+    local TestPanel = material.create("UnlitGeneric")
+    TestPanel:setTextureURL("$basetexture", "https://github.com/Asplur/Casino-Game-UI/blob/main/Testpanel.png?raw=true")
+
+    local Debug = true
 
     local function PlayerCount() return (Player1 and 1 or 0) + (Player2 and 1 or 0) + (Player3 and 1 or 0) + (Player4 and 1 or 0) end
 
@@ -126,6 +132,8 @@ if CLIENT then
 
     hook.add("render", "Screen Render All", function()
         local screenres = Vector(render.getResolution())
+        render.setMaterial(TestPanel)
+        render.drawTexturedRect(2, 0, 1015, 1024)
         render.setFont(fontArial62)
         render.drawText(screenres.x/2, screenres.y/2 - 60, "Waiting on Players "..PlayerCount().."/4", TEXT_ALIGN.CENTER)
     end)
@@ -135,15 +143,19 @@ if CLIENT then
         if currentScreen ~= screen1 then return end
         local screenres = Vector(render.getResolution())
         render.setFont(fontArial62)
-        render.drawText(screenres.x/2, screenres.y/2, "Screen 1", TEXT_ALIGN.CENTER)
+        render.drawText(screenres.x/2, screenres.y/2 + 10, "Screen 1", TEXT_ALIGN.CENTER)
 
         if player() == Player1 then
-            render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. Player1:getName(), TEXT_ALIGN.CENTER)
-
+            local MousePos = Vector(render.cursorPos(owner(), screen1))
+            render.drawText(screenres.x/2, screenres.y/2 + 60, "Player: ".. Player1:getName(), TEXT_ALIGN.CENTER)
+            render.setMaterial(Cursor)
+            render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
             if mouse_pressed then
-                local MousePos = Vector(render.cursorPos(owner(), screen1))
-                render.setFont(fontArial30)
-                render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+                if Debug then
+                    render.setFont(fontArial30)
+                    render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+                else
+                end
             end
         end
     end)
@@ -153,15 +165,19 @@ if CLIENT then
         if currentScreen ~= screen2 then return end
         local screenres = Vector(render.getResolution())
         render.setFont(fontArial62)
-        render.drawText(screenres.x/2, screenres.y/2, "Screen 1", TEXT_ALIGN.CENTER)
+        render.drawText(screenres.x/2, screenres.y/2, "Screen 2", TEXT_ALIGN.CENTER)
 
         if player() == Player2 then
+            local MousePos = Vector(render.cursorPos(owner(), screen2))
             render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. Player2:getName(), TEXT_ALIGN.CENTER)
-
+            render.setMaterial(Cursor)
+            render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
             if mouse_pressed then
-                local MousePos = Vector(render.cursorPos(owner(), screen2))
-                render.setFont(fontArial30)
-                render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+                if Debug then
+                    render.setFont(fontArial30)
+                    render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+                else
+                end
             end
         end
     end)
@@ -171,15 +187,19 @@ if CLIENT then
         if currentScreen ~= screen3 then return end
         local screenres = Vector(render.getResolution())
         render.setFont(fontArial62)
-        render.drawText(screenres.x/2, screenres.y/2, "Screen 1", TEXT_ALIGN.CENTER)
+        render.drawText(screenres.x/2, screenres.y/2, "Screen 3", TEXT_ALIGN.CENTER)
 
         if player() == Player3 then
+            local MousePos = Vector(render.cursorPos(owner(), screen3))
             render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. Player3:getName(), TEXT_ALIGN.CENTER)
-
+            render.setMaterial(Cursor)
+            render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
             if mouse_pressed then
-                local MousePos = Vector(render.cursorPos(owner(), screen3))
-                render.setFont(fontArial30)
-                render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+                if Debug then
+                    render.setFont(fontArial30)
+                    render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+                else
+                end
             end
         end
     end)
@@ -189,15 +209,19 @@ if CLIENT then
         if currentScreen ~= screen4 then return end
         local screenres = Vector(render.getResolution())
         render.setFont(fontArial62)
-        render.drawText(screenres.x/2, screenres.y/2, "Screen 1", TEXT_ALIGN.CENTER)
+        render.drawText(screenres.x/2, screenres.y/2, "Screen 4", TEXT_ALIGN.CENTER)
 
         if player() == Player4 then
+            local MousePos = Vector(render.cursorPos(owner(), screen4))
             render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. Player4:getName(), TEXT_ALIGN.CENTER)
-
+            render.setMaterial(Cursor)
+            render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
             if mouse_pressed then
-                local MousePos = Vector(render.cursorPos(owner(), screen4))
-                render.setFont(fontArial30)
-                render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+                if Debug then
+                    render.setFont(fontArial30)
+                    render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+                else
+                end
             end
         end
     end)
