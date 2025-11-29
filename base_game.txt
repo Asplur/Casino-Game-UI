@@ -130,97 +130,77 @@ if CLIENT then
     net.receive("Chair_Three", function() Player3 = net.readEntity() if net.readBool() == false then Player3 = nil end end)
     net.receive("Chair_Four", function() Player4 = net.readEntity() if net.readBool() == false then Player4 = nil end end)
 
-    hook.add("render", "Screen Render All", function()
+    hook.add("render", "Render Screens", function()
+        local currentScreen = render.getScreenEntity()
         local screenres = Vector(render.getResolution())
+        
+        -- Draw background on all screens
         render.setMaterial(TestPanel)
         render.drawTexturedRect(2, 0, 1015, 1024)
         render.setFont(fontArial62)
         render.drawText(screenres.x/2, screenres.y/2 - 60, "Waiting on Players "..PlayerCount().."/4", TEXT_ALIGN.CENTER)
-    end)
-
-    hook.add("render", "Screen Render One", function()
-        local currentScreen = render.getScreenEntity()
-        if currentScreen ~= screen1 then return end
-        local screenres = Vector(render.getResolution())
-        render.setFont(fontArial62)
-        render.drawText(screenres.x/2, screenres.y/2 + 10, "Screen 1", TEXT_ALIGN.CENTER)
-
-        if player() == Player1 then
-            local MousePos = Vector(render.cursorPos(owner(), screen1))
-            render.drawText(screenres.x/2, screenres.y/2 + 60, "Player: ".. Player1:getName(), TEXT_ALIGN.CENTER)
-            render.setMaterial(Cursor)
-            render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
-            if mouse_pressed then
-                if Debug then
-                    render.setFont(fontArial30)
-                    render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
-                else
-                end
-            end
-        end
-    end)
+        
+        -- Screen 1
+        if currentScreen == screen1 then
+            render.setFont(fontArial62)
+            render.drawText(screenres.x/2, screenres.y/2 + 10, "Screen 1", TEXT_ALIGN.CENTER)
     
-    hook.add("render", "Screen Render Two", function()
-        local currentScreen = render.getScreenEntity()
-        if currentScreen ~= screen2 then return end
-        local screenres = Vector(render.getResolution())
-        render.setFont(fontArial62)
-        render.drawText(screenres.x/2, screenres.y/2, "Screen 2", TEXT_ALIGN.CENTER)
-
-        if player() == Player2 then
-            local MousePos = Vector(render.cursorPos(owner(), screen2))
-            render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. Player2:getName(), TEXT_ALIGN.CENTER)
-            render.setMaterial(Cursor)
-            render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
-            if mouse_pressed then
-                if Debug then
+            if player() == Player1 then
+                local MousePos = Vector(render.cursorPos(owner(), screen1))
+                render.drawText(screenres.x/2, screenres.y/2 + 60, "Player: ".. (Player1 and Player1:getName() or ""), TEXT_ALIGN.CENTER)
+                render.setMaterial(Cursor)
+                render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
+                if mouse_pressed and Debug then
                     render.setFont(fontArial30)
                     render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
-                else
                 end
             end
-        end
-    end)
+        
+        -- Screen 2 
+        elseif currentScreen == screen2 then
+            render.setFont(fontArial62)
+            render.drawText(screenres.x/2, screenres.y/2, "Screen 2", TEXT_ALIGN.CENTER)
     
-    hook.add("render", "Screen Render Three", function()
-        local currentScreen = render.getScreenEntity()
-        if currentScreen ~= screen3 then return end
-        local screenres = Vector(render.getResolution())
-        render.setFont(fontArial62)
-        render.drawText(screenres.x/2, screenres.y/2, "Screen 3", TEXT_ALIGN.CENTER)
-
-        if player() == Player3 then
-            local MousePos = Vector(render.cursorPos(owner(), screen3))
-            render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. Player3:getName(), TEXT_ALIGN.CENTER)
-            render.setMaterial(Cursor)
-            render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
-            if mouse_pressed then
-                if Debug then
+            if player() == Player2 then
+                local MousePos = Vector(render.cursorPos(owner(), screen2))
+                render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. (Player2 and Player2:getName() or ""), TEXT_ALIGN.CENTER)
+                render.setMaterial(Cursor)
+                render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
+                if mouse_pressed and Debug then
                     render.setFont(fontArial30)
                     render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
-                else
                 end
             end
-        end
-    end)
-
-    hook.add("render", "Screen Render Four", function()
-        local currentScreen = render.getScreenEntity()
-        if currentScreen ~= screen4 then return end
-        local screenres = Vector(render.getResolution())
-        render.setFont(fontArial62)
-        render.drawText(screenres.x/2, screenres.y/2, "Screen 4", TEXT_ALIGN.CENTER)
-
-        if player() == Player4 then
-            local MousePos = Vector(render.cursorPos(owner(), screen4))
-            render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. Player4:getName(), TEXT_ALIGN.CENTER)
-            render.setMaterial(Cursor)
-            render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
-            if mouse_pressed then
-                if Debug then
+        
+        -- Screen 3
+        elseif currentScreen == screen3 then
+            render.setFont(fontArial62)
+            render.drawText(screenres.x/2, screenres.y/2, "Screen 3", TEXT_ALIGN.CENTER)
+    
+            if player() == Player3 then
+                local MousePos = Vector(render.cursorPos(owner(), screen3))
+                render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. (Player3 and Player3:getName() or ""), TEXT_ALIGN.CENTER)
+                render.setMaterial(Cursor)
+                render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
+                if mouse_pressed and Debug then
                     render.setFont(fontArial30)
                     render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
-                else
+                end
+            end
+        
+        -- Screen 4
+        elseif currentScreen == screen4 then
+            render.setFont(fontArial62)
+            render.drawText(screenres.x/2, screenres.y/2, "Screen 4", TEXT_ALIGN.CENTER)
+    
+            if player() == Player4 then
+                local MousePos = Vector(render.cursorPos(owner(), screen4))
+                render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. (Player4 and Player4:getName() or ""), TEXT_ALIGN.CENTER)
+                render.setMaterial(Cursor)
+                render.drawTexturedRect(MousePos.x, MousePos.y, 50, 50)
+                if mouse_pressed and Debug then
+                    render.setFont(fontArial30)
+                    render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
                 end
             end
         end
