@@ -1,0 +1,204 @@
+--@name Base_Game
+--@author Asplur
+--@shared
+
+------------------------------------------------------------------------------------------------
+
+local Chip = chip()
+
+if SERVER then
+
+    local Table = Chip:isWeldedTo()
+    Table:setUnbreakable(true)
+
+    local SeatOffset = 50
+    local Chair_One = prop.createSeat(Table:getPos() - Vector(0, 0, 17) + Table:getForward() * SeatOffset, Table:getAngles() + Angle(0, 90, 0), "models/seats/chair_stool01a.mdl", true)
+    local Chair_Two = prop.createSeat(Table:getPos() - Vector(0, 0, 17) - Table:getForward() * SeatOffset, Table:getAngles() + Angle(0, 270, 0), "models/seats/chair_stool01a.mdl", true)
+    local Chair_Three = prop.createSeat(Table:getPos() - Vector(0, 0, 17) + Table:getRight() * SeatOffset, Table:getAngles() + Angle(0, 0, 0), "models/seats/chair_stool01a.mdl", true)
+    local Chair_Four = prop.createSeat(Table:getPos() - Vector(0, 0, 17) - Table:getRight() * SeatOffset, Table:getAngles() + Angle(0, 180, 0), "models/seats/chair_stool01a.mdl", true)
+    
+    Chair_One:setParent(Table)
+    Chair_Two:setParent(Table)
+    Chair_Three:setParent(Table)
+    Chair_Four:setParent(Table)
+    Chair_One:doNotDuplicate(true)
+    Chair_Two:doNotDuplicate(true)
+    Chair_Three:doNotDuplicate(true)
+    Chair_Four:doNotDuplicate(true)
+
+    timer.simple(1, function()
+        local screen1Pos = Table:getPos() + Vector(0, 0, 31.8) + Table:getForward() * 19.15
+        local screen1Ang = (Table:getPos() - screen1Pos + Vector(0, 37.3, 0)):getAngle()
+        local screen1 = prop.createComponent(screen1Pos, screen1Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
+        screen1:setColor(Color(255,255,255,1))
+        screen1:setNocollideAll(true)
+        screen1:linkComponent(Chip)
+        screen1:setParent(Chip)
+        screen1:doNotDuplicate()
+        local screen2Pos = Table:getPos() + Vector(0, 0, 31.8) - Table:getForward() * 19.15
+        local screen2Ang = (Table:getPos() - screen2Pos + Vector(0, -37.3, 0)):getAngle()
+        local screen2 = prop.createComponent(screen2Pos, screen2Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
+        screen2:setColor(Color(255,255,255,1))
+        screen2:setNocollideAll(true)
+        screen2:linkComponent(Chip)
+        screen2:setParent(Chip)
+        screen2:doNotDuplicate()
+        local screen3Pos = Table:getPos() + Vector(0, 0, 31.8) + Table:getRight() * 19.15
+        local screen3Ang = (Table:getPos() - screen3Pos + Vector(37.3, 0, 0)):getAngle()
+        local screen3 = prop.createComponent(screen3Pos, screen3Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
+        screen3:setColor(Color(255,255,255,1))
+        screen3:setNocollideAll(true)
+        screen3:linkComponent(Chip)
+        screen3:setParent(Chip)
+        screen3:doNotDuplicate()
+        local screen4Pos = Table:getPos() + Vector(0, 0, 31.8) - Table:getRight() * 19.15
+        local screen4Ang = (Table:getPos() - screen4Pos + Vector(-37.3, 0, 0)):getAngle()
+        local screen4 = prop.createComponent(screen4Pos, screen4Ang, "starfall_screen", "models/bull/dynamicbuttonsf.mdl", true)
+        screen4:setColor(Color(255,255,255,1))
+        screen4:setNocollideAll(true)
+        screen4:linkComponent(Chip)
+        screen4:setParent(Chip)
+        screen4:doNotDuplicate()
+    end)
+
+    hook.add("PlayerEnteredVehicle", "", function(ply, vehicle, num)
+        if vehicle == Chair_One then net.start("Chair_One") net.writeEntity(ply) net.writeBool(true) net.send() end
+        if vehicle == Chair_Two then net.start("Chair_Two") net.writeEntity(ply) net.writeBool(true) net.send() end
+        if vehicle == Chair_Three then net.start("Chair_Three") net.writeEntity(ply) net.writeBool(true) net.send() end
+        if vehicle == Chair_Four then net.start("Chair_Four") net.writeEntity(ply) net.writeBool(true) net.send() end    
+    end)
+
+    hook.add("PlayerLeaveVehicle", "", function(ply, vehicle)
+        if vehicle == Chair_One then net.start("Chair_One") net.writeEntity(ply) net.writeBool(false) net.send() end
+        if vehicle == Chair_Two then net.start("Chair_Two") net.writeEntity(ply) net.writeBool(false) net.send() end
+        if vehicle == Chair_Three then net.start("Chair_Three") net.writeEntity(ply) net.writeBool(false) net.send() end
+        if vehicle == Chair_Four then net.start("Chair_Four") net.writeEntity(ply) net.writeBool(false) net.send() end 
+    end)
+end
+
+------------------------------------------------------------------------------------------------
+
+if CLIENT then
+    local ScreenScale = Vector(0.8,0.5) * 0.48
+    local screenWidth = 512 * ScreenScale.x 
+    local screenHeight = 512 * ScreenScale.y
+
+    local screen1, screen2, screen3, screen4 = nil, nil, nil, nil
+    local Player1, Player2, Player3, Player4 = nil, nil, nil, nil
+    local mouse_pressed = false
+
+    local function PlayerCount() return (Player1 and 1 or 0) + (Player2 and 1 or 0) + (Player3 and 1 or 0) + (Player4 and 1 or 0) end
+
+    timer.simple(1.6, function()
+        screen1 = chip():getLinkedComponents()[1]
+        render.setScreenDimensions(screen1, 0, 0, 50 * ScreenScale.x, 50 * ScreenScale.y)
+        screen2 = chip():getLinkedComponents()[2]
+        render.setScreenDimensions(screen2, 0, 0, 50 * ScreenScale.x, 50 * ScreenScale.y)
+        screen3 = chip():getLinkedComponents()[3]
+        render.setScreenDimensions(screen3, 0, 0, 50 * ScreenScale.x, 50 * ScreenScale.y)
+        screen4 = chip():getLinkedComponents()[4]
+        render.setScreenDimensions(screen4, 0, 0, 50 * ScreenScale.x, 50 * ScreenScale.y)
+    end)
+
+    hook.add("PlayerConnect", "", function(networkid, name, userid, isbot)
+        timer.simple(2, function()
+            screen1 = chip():getLinkedComponents()[1]
+            render.setScreenDimensions(screen1, 0, 0, 50 * ScreenScale.x, 50 * ScreenScale.y)
+            screen2 = chip():getLinkedComponents()[2]
+            render.setScreenDimensions(screen2, 0, 0, 50 * ScreenScale.x, 50 * ScreenScale.y)
+            screen3 = chip():getLinkedComponents()[3]
+            render.setScreenDimensions(screen3, 0, 0, 50 * ScreenScale.x, 50 * ScreenScale.y)
+            screen4 = chip():getLinkedComponents()[4]
+            render.setScreenDimensions(screen4, 0, 0, 50 * ScreenScale.x, 50 * ScreenScale.y)
+        end)
+    end)
+
+    hook.add("InputPressed", "", function(button) mouse_pressed = input.isMouseDown(MOUSE.LEFT) end)
+    hook.add("InputReleased", "", function(button) mouse_pressed = input.isMouseDown(MOUSE.LEFT) end)
+
+    local fontArial62 = render.createFont("Arial",62,500,true,false,false,false,0,false,0)
+    local fontArial30 = render.createFont("Arial",30,500,true,false,false,false,0,false,0)
+
+    net.receive("Chair_One", function() Player1 = net.readEntity() if net.readBool() == false then Player1 = nil end end)
+    net.receive("Chair_Two", function() Player2 = net.readEntity() if net.readBool() == false then Player2 = nil end end)
+    net.receive("Chair_Three", function() Player3 = net.readEntity() if net.readBool() == false then Player3 = nil end end)
+    net.receive("Chair_Four", function() Player4 = net.readEntity() if net.readBool() == false then Player4 = nil end end)
+
+    hook.add("render", "Screen Render All", function()
+        local screenres = Vector(render.getResolution())
+        render.setFont(fontArial62)
+        render.drawText(screenres.x/2, screenres.y/2 - 60, "Waiting on Players "..PlayerCount().."/4", TEXT_ALIGN.CENTER)
+    end)
+
+    hook.add("render", "Screen Render One", function()
+        local currentScreen = render.getScreenEntity()
+        if currentScreen ~= screen1 then return end
+        local screenres = Vector(render.getResolution())
+        render.setFont(fontArial62)
+        render.drawText(screenres.x/2, screenres.y/2, "Screen 1", TEXT_ALIGN.CENTER)
+
+        if player() == Player1 then
+            render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. Player1:getName(), TEXT_ALIGN.CENTER)
+
+            if mouse_pressed then
+                local MousePos = Vector(render.cursorPos(owner(), screen1))
+                render.setFont(fontArial30)
+                render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+            end
+        end
+    end)
+    
+    hook.add("render", "Screen Render Two", function()
+        local currentScreen = render.getScreenEntity()
+        if currentScreen ~= screen2 then return end
+        local screenres = Vector(render.getResolution())
+        render.setFont(fontArial62)
+        render.drawText(screenres.x/2, screenres.y/2, "Screen 1", TEXT_ALIGN.CENTER)
+
+        if player() == Player2 then
+            render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. Player2:getName(), TEXT_ALIGN.CENTER)
+
+            if mouse_pressed then
+                local MousePos = Vector(render.cursorPos(owner(), screen2))
+                render.setFont(fontArial30)
+                render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+            end
+        end
+    end)
+    
+    hook.add("render", "Screen Render Three", function()
+        local currentScreen = render.getScreenEntity()
+        if currentScreen ~= screen3 then return end
+        local screenres = Vector(render.getResolution())
+        render.setFont(fontArial62)
+        render.drawText(screenres.x/2, screenres.y/2, "Screen 1", TEXT_ALIGN.CENTER)
+
+        if player() == Player3 then
+            render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. Player3:getName(), TEXT_ALIGN.CENTER)
+
+            if mouse_pressed then
+                local MousePos = Vector(render.cursorPos(owner(), screen3))
+                render.setFont(fontArial30)
+                render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+            end
+        end
+    end)
+
+    hook.add("render", "Screen Render Four", function()
+        local currentScreen = render.getScreenEntity()
+        if currentScreen ~= screen4 then return end
+        local screenres = Vector(render.getResolution())
+        render.setFont(fontArial62)
+        render.drawText(screenres.x/2, screenres.y/2, "Screen 1", TEXT_ALIGN.CENTER)
+
+        if player() == Player4 then
+            render.drawText(screenres.x/2, screenres.y/2 + 50, "Player: ".. Player4:getName(), TEXT_ALIGN.CENTER)
+
+            if mouse_pressed then
+                local MousePos = Vector(render.cursorPos(owner(), screen4))
+                render.setFont(fontArial30)
+                render.drawText(MousePos.x, MousePos.y, "("..math.round(MousePos.x, 1)..","..math.round(MousePos.y, 1)..")", TEXT_ALIGN.CENTER)
+            end
+        end
+    end)
+end
